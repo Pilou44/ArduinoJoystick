@@ -63,71 +63,68 @@ void setup() {
   Joystick.begin();
 }
 
-void loop() {
-  if (digitalRead(DIR_LEFT) == HIGH) {
-    Joystick.setXAxis(-1);
-  } else if (digitalRead(DIR_RIGHT) == HIGH) {
-    Joystick.setXAxis(1);
-  } else {
-    Joystick.setXAxis(0);
-  }
-  if (digitalRead(DIR_UP) == HIGH) {
-    Joystick.setYAxis(-1);
-  } else if (digitalRead(DIR_DOWN) == HIGH) {
-    Joystick.setYAxis(1);
-  } else {
-    Joystick.setYAxis(0);
-  }
+uint8_t button1State = 0;
+uint8_t button2State = 0;
+uint8_t button3State = 0;
+uint8_t button4State = 0;
+uint8_t button5State = 0;
+uint8_t button6State = 0;
+uint8_t button7State = 0;
+uint8_t button8State = 0;
+uint8_t buttonStartState = 0;
+uint8_t buttonSelectState = 0;
 
-  if (digitalRead(BUTTON_1) == HIGH) {
-    Joystick.pressButton(0);
-  } else {
-    Joystick.releaseButton(0);
+int8_t xAxisState = 0;
+int8_t yAxisState = 0;
+
+void checkButton(uint8_t buttonIO, uint8_t buttonNumber, uint8_t *buttonState) {
+  uint8_t buttonValue = digitalRead(buttonIO);
+  if (buttonValue != *buttonState) {
+    *buttonState = buttonValue;
+    Joystick.setButton(buttonNumber, buttonValue);
   }
-  if (digitalRead(BUTTON_2) == HIGH) {
-    Joystick.pressButton(1);
-  } else {
-    Joystick.releaseButton(1);
+}
+
+void checkXAxis() {
+  int8_t value = 0;
+  if (digitalRead(DIR_LEFT) == HIGH) {
+    value = -1;
+  } else if (digitalRead(DIR_RIGHT) == HIGH) {
+    value = 1;
   }
-  if (digitalRead(BUTTON_3) == HIGH) {
-    Joystick.pressButton(2);
-  } else {
-    Joystick.releaseButton(2);
+  if (value != xAxisState) {
+    xAxisState = value;
+    Joystick.setXAxis(value);
   }
-  if (digitalRead(BUTTON_4) == HIGH) {
-    Joystick.pressButton(3);
-  } else {
-    Joystick.releaseButton(3);
+}
+
+void checkYAxis() {
+  int8_t value = 0;
+  if (digitalRead(DIR_UP) == HIGH) {
+    value = -1;
+  } else if (digitalRead(DIR_DOWN) == HIGH) {
+    value = 1;
   }
-  if (digitalRead(BUTTON_5) == HIGH) {
-    Joystick.pressButton(4);
-  } else {
-    Joystick.releaseButton(4);
+  if (value != yAxisState) {
+    yAxisState = value;
+    Joystick.setYAxis(value);
   }
-  if (digitalRead(BUTTON_6) == HIGH) {
-    Joystick.pressButton(5);
-  } else {
-    Joystick.releaseButton(5);
-  }
-  if (digitalRead(BUTTON_7) == HIGH) {
-    Joystick.pressButton(6);
-  } else {
-    Joystick.releaseButton(6);
-  }
-  if (digitalRead(BUTTON_8) == HIGH) {
-    Joystick.pressButton(7);
-  } else {
-    Joystick.releaseButton(7);
-  }
-  if (digitalRead(BUTTON_START) == HIGH) {
-    Joystick.pressButton(8);
-  } else {
-    Joystick.releaseButton(8);
-  }
-  if (digitalRead(BUTTON_SELECT) == HIGH) {
-    Joystick.pressButton(9);
-  } else {
-    Joystick.releaseButton(9);
-  }
-  delay(10);
+}
+
+void loop() {
+  checkXAxis();
+  checkYAxis();
+
+  checkButton(BUTTON_1, 0, &button1State);
+  checkButton(BUTTON_2, 1, &button2State);
+  checkButton(BUTTON_3, 2, &button3State);
+  checkButton(BUTTON_4, 3, &button4State);
+  checkButton(BUTTON_5, 4, &button5State);
+  checkButton(BUTTON_6, 5, &button6State);
+  checkButton(BUTTON_7, 6, &button7State);
+  checkButton(BUTTON_8, 7, &button8State);
+  checkButton(BUTTON_START, 8, &buttonStartState);
+  checkButton(BUTTON_SELECT, 9, &buttonSelectState);
+
+  delay(30);
 }
